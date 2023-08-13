@@ -138,6 +138,7 @@
         const balance = await contractInstance.methods.getBalance().call();
         document.getElementById('balance').textContent = web3.utils.fromWei(balance, 'ether') + ' ETH';
     }
+	showBalance();
 </script>
 
 <p>Balance del contrato: <span id="balance">Cargando...</span></p>
