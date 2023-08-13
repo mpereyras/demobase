@@ -1,0 +1,145 @@
+<script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+<script>
+    // Dirección del contrato en la red Ethereum
+    const contractAddress = '0x3fd1db5cc1cec7c860600c4558214d9fb9fa01e6'; // Coloca aquí la dirección del contrato
+
+    // ABI del contrato
+    const contractABI =[
+	{
+		"inputs": [],
+		"name": "deposit",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "account",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"name": "Deposit",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"name": "withdraw",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "account",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"name": "Withdraw",
+		"type": "event"
+	},
+	{
+		"inputs": [],
+		"name": "balance",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getBalance",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "owner",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+];
+
+    // Conexión a la red Ethereum
+    const web3 = new Web3(Web3.givenProvider);
+
+    // Crear una instancia del contrato
+    const contractInstance = new web3.eth.Contract(contractABI, contractAddress);
+</script>
+
+
+<script>
+    async function deposit() {
+        // Asegúrate de que MetaMask esté conectado y el usuario haya dado su consentimiento
+        const accounts = await web3.eth.requestAccounts();
+        const sender = accounts[0];
+
+        // Llama a la función deposit en el contrato
+        try {
+            await contractInstance.methods.deposit().send({ from: sender, value: web3.utils.toWei('1', 'ether') });
+            alert('Depósito realizado con éxito');
+            // Actualiza el balance mostrado en la página
+            showBalance();
+        } catch (error) {
+            console.error('Error al realizar el depósito', error);
+        }
+    }
+
+    async function showBalance() {
+        const balance = await contractInstance.methods.getBalance().call();
+        document.getElementById('balance').textContent = web3.utils.fromWei(balance, 'ether') + ' ETH';
+    }
+</script>
+
+<p>Balance del contrato: <span id="balance">Cargando...</span></p>
+<button onclick="deposit()">Depositar</button>
+<button onclick="showBalance()">Balance</button>
