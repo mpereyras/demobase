@@ -136,7 +136,7 @@
 
     async function showBalance() {
         const balance = await contractInstance.methods.getBalance().call();
-        document.getElementById('balance').textContent = web3.utils.fromWei(balance, 'ether') + ' ETH';
+        document.getElementById('balance').textContent = web3.utils.fromWei(balance, 'gwei') + ' GWEYY';
     }
 	showBalance();
 </script>
